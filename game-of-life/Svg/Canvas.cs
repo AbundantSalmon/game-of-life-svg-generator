@@ -41,20 +41,20 @@ namespace GameOfLife.Svg
             return text;
         }
 
-        public async void WriteSvg(String filename)
+        public void WriteSvg(String filename)
         {
             String text = GenerateSvg();
-            await File.WriteAllTextAsync($"{filename}.svg", text);
+            File.WriteAllText($"{filename}.svg", text);
         }
 
-        public async void WriteHtml(String filename)
+        public void WriteHtml(String filename)
         {
             String text = "<html>\n";
             text += "<body>\n";
             text += GenerateSvg();
             text += "</body>\n";
             text += "</html>\n";
-            await File.WriteAllTextAsync($"{filename}.html", text);
+            File.WriteAllText($"{filename}.html", text);
         }
     }
 }
