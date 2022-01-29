@@ -28,26 +28,31 @@ namespace GameOfLife
                 getDefaultValue: () => 10,
                 description: "Spacing in pixels between the cells"
                 );
+            cellSpacingOption.AddAlias("-s");
             Option<int> cellRadiusOption = new Option<int>(
                 "--radius",
                 getDefaultValue: () => 4,
                 description: "Radius in pixels between the cells"
                 );
+            cellRadiusOption.AddAlias("-r");
             Option<String> cellColourOption = new Option<String>(
                 "--colour",
                 getDefaultValue: () => "black",
                 description: "Colour of the cells"
                 );
+            cellColourOption.AddAlias("-c");
             Option<int> widthOption = new Option<int>(
                 "--width",
                 getDefaultValue: () => 600,
                 description: "Width in pixels"
                 );
+            widthOption.AddAlias("-w");
             Option<int> heightOption = new Option<int>(
                 "--height",
                 getDefaultValue: () => 600,
                 description: "Height in pixels"
                 );
+            heightOption.AddAlias("-h");
             Option<String> filenameOption = new Option<String>(
                 "--filename",
                 getDefaultValue: () => "thing",
