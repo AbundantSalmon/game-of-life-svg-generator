@@ -1,4 +1,6 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
+
 namespace GameOfLife.Game
 {
     public class Board
@@ -61,6 +63,23 @@ namespace GameOfLife.Game
                     if (j < this.GetWidth() - 1 - 1)
                     {
                         cellOfConcern.AddNeighbour(this._cells[i, j + 1]);
+                    }
+
+                    if (i > 0 && j > 0)
+                    {
+                        cellOfConcern.AddNeighbour(this._cells[i - 1, j - 1]);
+                    }
+                    if (i > 0 && j < this.GetWidth() - 1 - 1)
+                    {
+                        cellOfConcern.AddNeighbour(this._cells[i - 1, j + 1]);
+                    }
+                    if (i < this.GetHeight() - 1 - 1 && j > 0)
+                    {
+                        cellOfConcern.AddNeighbour(this._cells[i + 1, j - 1]);
+                    }
+                    if (i < this.GetHeight() - 1 - 1 && j < this.GetWidth() - 1 - 1)
+                    {
+                        cellOfConcern.AddNeighbour(this._cells[i + 1, j + 1]);
                     }
                 }
             }
