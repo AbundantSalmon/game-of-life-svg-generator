@@ -11,13 +11,28 @@ namespace GameOfLife.Game
 
     public class Cell
     {
+        private readonly Svg.Cell _svgCell;
         private State _state = State.ALIVE;
         private readonly List<Cell> _neighbours = new List<Cell>();
         private State _nextState = State.ALIVE;
 
+        public int DurationSeconds { get => SvgCell.DurationSeconds; set => SvgCell.DurationSeconds = value; }
+        public int X { get => SvgCell.X; set => SvgCell.X = value; }
+        public int Y { get => SvgCell.Y; set => SvgCell.Y = value; }
+        public int Width { get => SvgCell.Width; set => SvgCell.Width = value; }
+        public int Height { get => SvgCell.Height; set => SvgCell.Height = value; }
+        public int Rx { get => SvgCell.Rx; set => SvgCell.Rx = value; }
+        public string Fill { get => SvgCell.Fill; set => SvgCell.Fill = value; }
+
+        public Svg.Cell SvgCell => _svgCell;
+
         public Cell(State state)
         {
-            this.SetState(state);
+            SetState(state);
+            _svgCell = new Svg.Cell();
+            _svgCell.AddKeyFrame(
+                0,
+                0.0);
         }
 
         public State GetState()
@@ -38,7 +53,7 @@ namespace GameOfLife.Game
         public void PrepareNextState()
         {
             int numOfAliveNeighbours = 0;
-            foreach (Cell cell in this._neighbours)
+            foreach (Cell cell in _neighbours)
             {
                 if (cell.GetState() == State.ALIVE)
                 {
@@ -46,26 +61,26 @@ namespace GameOfLife.Game
                 }
             }
 
-            if (this.GetState() == State.ALIVE)
+            if (GetState() == State.ALIVE)
             {
                 if (numOfAliveNeighbours == 2 || numOfAliveNeighbours == 3)
                 {
-                    this._nextState = State.ALIVE;
+                    _nextState = State.ALIVE;
                 }
                 else
                 {
-                    this._nextState = State.DEAD;
+                    _nextState = State.DEAD;
                 }
             }
             else
             {
                 if (numOfAliveNeighbours == 3)
                 {
-                    this._nextState = State.ALIVE;
+                    _nextState = State.ALIVE;
                 }
                 else
                 {
-                    this._nextState = State.DEAD;
+                    _nextState = State.DEAD;
                 }
 
             }
@@ -73,7 +88,20 @@ namespace GameOfLife.Game
 
         public void SetNextState()
         {
-            SetState(this._nextState);
+            Clock clock = Clock.Instance;
+            State newState = _nextState;
+
+            SetState(newState);
+            int opacityValue = newState == State.ALIVE ? 1 : 0;
+            SvgCell.AddKeyFrame(opacityValue, clock.getCurrentTimeFraction());
+        }
+
+        public void SetNextState(double timeFraction)
+        {
+            State newState = _nextState;
+            SetState(newState);
+            int opacityValue = newState == State.ALIVE ? 1 : 0;
+            SvgCell.AddKeyFrame(opacityValue, timeFraction);
         }
     }
 }

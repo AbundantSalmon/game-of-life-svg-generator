@@ -12,8 +12,10 @@
 
   <ItemGroup>
     <None Remove="game\" />
+    <None Remove="Svg\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Games\" />
+    <Folder Include="Game\" />
+    <Folder Include="Svg\" />
   </ItemGroup>
 </Project>

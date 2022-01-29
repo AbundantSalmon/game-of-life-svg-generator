@@ -3,16 +3,40 @@ namespace GameOfLife.Game
 {
     public class Board
     {
+        private readonly Svg.Canvas _canvas;
         private readonly Cell[,] _cells;
 
-        public Board(int rows, int cols)
+        public Svg.Canvas Canvas => _canvas;
+
+        public Board(
+            int rows,
+            int cols,
+            int cellSpacing,
+            int cellRadius,
+            String cellColour,
+            int width,
+            int height)
         {
+            this._canvas = new Svg.Canvas(width, height);
             this._cells = new Cell[rows, cols];
+
             for (int i = 0; i < this.GetHeight(); ++i)
             {
                 for (int j = 0; j < this.GetWidth(); ++j)
                 {
-                    this._cells[i, j] = new Cell(State.ALIVE);
+                    Cell newCell = new Cell(State.ALIVE);
+                    this._cells[i, j] = newCell;
+                    this._canvas.AddCell(newCell.SvgCell);
+
+                    int cellHeight = (_canvas.Height / rows) - cellSpacing;
+                    int cellWidth = (_canvas.Width / cols) - cellSpacing;
+                    newCell.Height = cellHeight;
+                    newCell.Width = cellWidth;
+                    newCell.X = (cellWidth + cellSpacing) * j;
+                    newCell.Y = (cellWidth + cellSpacing) * i;
+                    newCell.Rx = cellRadius;
+                    newCell.DurationSeconds = Clock.Instance.getTotalTime();
+                    newCell.Fill = cellColour;
                 }
             }
 
@@ -86,6 +110,17 @@ namespace GameOfLife.Game
                 for (int j = 0; j < this.GetWidth(); ++j)
                 {
                     this._cells[i, j].SetNextState();
+                }
+            }
+        }
+
+        public void SetFinalState()
+        {
+            for (int i = 0; i < this.GetHeight(); ++i)
+            {
+                for (int j = 0; j < this.GetWidth(); ++j)
+                {
+                    this._cells[i, j].SetNextState(1.0);
                 }
             }
         }

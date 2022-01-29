@@ -23,39 +23,109 @@ namespace GameOfLife
                 "--tick",
                 getDefaultValue: () => 500,
                 description: "Time between ticks in milliseconds");
+            Option<int> cellSpacingOption = new Option<int>(
+                "--spacing",
+                getDefaultValue: () => 10,
+                description: "Spacing in pixels between the cells"
+                );
+            Option<int> cellRadiusOption = new Option<int>(
+                "--radius",
+                getDefaultValue: () => 4,
+                description: "Radius in pixels between the cells"
+                );
+            Option<String> cellColourOption = new Option<String>(
+                "--colour",
+                getDefaultValue: () => "black",
+                description: "Colour of the cells"
+                );
+            Option<int> widthOption = new Option<int>(
+                "--width",
+                getDefaultValue: () => 600,
+                description: "Width in pixels"
+                );
+            Option<int> heightOption = new Option<int>(
+                "--height",
+                getDefaultValue: () => 600,
+                description: "Height in pixels"
+                );
 
             RootCommand rootCommand = new RootCommand{
                 rowsOption,
                 colsOption,
                 totalTimeOption,
-                timeBetweenTicksOption
+                timeBetweenTicksOption,
+                cellSpacingOption,
+                cellRadiusOption,
+                cellColourOption,
+                widthOption,
+                heightOption
             };
 
             rootCommand.Description = "Generates Conway's game of life";
 
             rootCommand.SetHandler(
-                (int rows, int cols, int totalTime, int timeBetweenTicks) =>
+                (int rows, int cols, int totalTime, int timeBetweenTicks, int cellSpacing, int cellRadius, String cellColour, int width, int height) =>
                 {
-                    Run(rows, cols, totalTime, timeBetweenTicks);
+                    Run(
+                        rows,
+                        cols,
+                        totalTime,
+                        timeBetweenTicks,
+                        cellSpacing,
+                        cellRadius,
+                        cellColour,
+                        width,
+                        height);
                 },
-                rowsOption, colsOption, totalTimeOption, timeBetweenTicksOption
+                rowsOption,
+                colsOption,
+                totalTimeOption,
+                timeBetweenTicksOption,
+                cellSpacingOption,
+                cellRadiusOption,
+                cellColourOption,
+                widthOption,
+                heightOption
                 );
 
             return rootCommand.Invoke(args);
         }
 
-        static void Run(int rows, int cols, int totalTime, int timeBetweenTicks)
+        static void Run(
+            int rows,
+            int cols,
+            int totalTime,
+            int timeBetweenTicks,
+            int cellSpacing,
+            int cellRadius,
+            String cellColour,
+            int width,
+            int height)
         {
-            Game.Board board = new Game.Board(rows, cols);
+            Game.Clock clock = Game.Clock.Instance;
+            clock.SetUp(totalTime, timeBetweenTicks);
+
+            Game.Board board = new Game.Board(
+                rows,
+                cols,
+                cellSpacing,
+                cellRadius,
+                cellColour,
+                width,
+                height);
             board.SetRandomBoardState();
 
-            for (int i = 0; i < totalTime * 1000 / timeBetweenTicks; ++i)
+            while (clock.Tick())
             {
                 Console.Clear();
                 board.PrintBoardState();
-                board.Tick();
                 System.Threading.Thread.Sleep(timeBetweenTicks);
+                board.Tick();
             }
+
+            board.SetFinalState();
+
+            board.Canvas.WriteSvg();
         }
     }
 }
