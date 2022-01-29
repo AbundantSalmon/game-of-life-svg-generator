@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.CommandLine;
+using System.IO;
+using Microsoft.VisualBasic.FileIO;
 
 namespace GameOfLife
 {
@@ -59,6 +62,11 @@ namespace GameOfLife
                 description: "Filename without the extension"
                 );
             filenameOption.AddAlias("-f");
+            Option<FileInfo> seedFileOption = new Option<FileInfo>(
+                "--seed",
+                getDefaultValue: () => null,
+                description: "Seed file, should be a csv with with 1 in alive cells"
+                );
 
             RootCommand rootCommand = new RootCommand{
                 rowsOption,
@@ -70,25 +78,43 @@ namespace GameOfLife
                 cellColourOption,
                 widthOption,
                 heightOption,
-                filenameOption
+                filenameOption,
+                seedFileOption
             };
 
             rootCommand.Description = "Generates Conway's game of life";
 
             rootCommand.SetHandler(
-                (int rows, int cols, int totalTime, int timeBetweenTicks, int cellSpacing, int cellRadius, String cellColour, int width, int height, String filename) =>
+                (int rows, int cols, int totalTime, int timeBetweenTicks, int cellSpacing, int cellRadius, String cellColour, int width, int height, String filename, FileInfo seedFile) =>
                 {
-                    Run(
-                        rows,
-                        cols,
-                        totalTime,
-                        timeBetweenTicks,
-                        cellSpacing,
-                        cellRadius,
-                        cellColour,
-                        width,
-                        height,
-                        filename);
+                    if (seedFile is null)
+                    {
+                        Run(
+                            rows,
+                            cols,
+                            totalTime,
+                            timeBetweenTicks,
+                            cellSpacing,
+                            cellRadius,
+                            cellColour,
+                            width,
+                            height,
+                            filename);
+                    }
+                    else
+                    {
+                        ImportAndRun(
+                            totalTime,
+                            timeBetweenTicks,
+                            cellSpacing,
+                            cellRadius,
+                            cellColour,
+                            width,
+                            height,
+                            filename,
+                            seedFile);
+                    }
+
                 },
                 rowsOption,
                 colsOption,
@@ -99,7 +125,8 @@ namespace GameOfLife
                 cellColourOption,
                 widthOption,
                 heightOption,
-                filenameOption
+                filenameOption,
+                seedFileOption
                 );
 
             return rootCommand.Invoke(args);
@@ -135,6 +162,62 @@ namespace GameOfLife
                 Console.Clear();
                 board.PrintBoardState();
                 System.Threading.Thread.Sleep(timeBetweenTicks);
+                board.Tick();
+            }
+
+            board.SetFinalState();
+
+            board.Canvas.WriteSvg(filename);
+            board.Canvas.WriteHtml(filename);
+        }
+
+        static void ImportAndRun(
+            int totalTime,
+            int timeBetweenTicks,
+            int cellSpacing,
+            int cellRadius,
+            String cellColour,
+            int width,
+            int height,
+            String filename,
+            FileInfo seedFile)
+        {
+            List<List<string>> readCsv = new List<List<string>>();
+
+            using TextFieldParser csvParser = new TextFieldParser(seedFile.OpenRead());
+            csvParser.CommentTokens = new string[] { "#" };
+            csvParser.SetDelimiters(new string[] { "," });
+            csvParser.HasFieldsEnclosedInQuotes = true;
+
+            while (!csvParser.EndOfData)
+            {
+                String[] fields = csvParser.ReadFields();
+                List<string> newList = new List<string>(fields);
+                readCsv.Add(newList);
+            }
+
+            int rows = readCsv.Count;
+            int cols = readCsv[0].Count;
+
+            Game.Clock clock = Game.Clock.Instance;
+            clock.SetUp(totalTime, timeBetweenTicks);
+
+            Game.Board board = new Game.Board(
+                rows,
+                cols,
+                cellSpacing,
+                cellRadius,
+                cellColour,
+                width,
+                height);
+
+            board.SetBoardState(readCsv);
+
+            while (clock.Tick())
+            {
+                Console.Clear();
+                board.PrintBoardState();
+                //System.Threading.Thread.Sleep(timeBetweenTicks);
                 board.Tick();
             }
 

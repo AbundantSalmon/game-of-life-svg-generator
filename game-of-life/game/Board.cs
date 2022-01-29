@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 namespace GameOfLife.Game
 {
     public class Board
@@ -93,6 +93,17 @@ namespace GameOfLife.Game
             {
                 State randomState = (State)values.GetValue(random.Next(values.Length));
                 cell.SetState(randomState);
+            }
+        }
+
+        public void SetBoardState(List<List<String>> list)
+        {
+            for (int i = 0; i < this.GetHeight(); ++i)
+            {
+                for (int j = 0; j < this.GetWidth(); ++j)
+                {
+                    this._cells[i, j].SetState(list[i][j].Equals("1") ? State.ALIVE : State.DEAD);
+                }
             }
         }
 
