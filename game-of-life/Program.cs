@@ -48,6 +48,12 @@ namespace GameOfLife
                 getDefaultValue: () => 600,
                 description: "Height in pixels"
                 );
+            Option<String> filenameOption = new Option<String>(
+                "--filename",
+                getDefaultValue: () => "thing",
+                description: "Filename without the extension"
+                );
+            filenameOption.AddAlias("-f");
 
             RootCommand rootCommand = new RootCommand{
                 rowsOption,
@@ -58,13 +64,14 @@ namespace GameOfLife
                 cellRadiusOption,
                 cellColourOption,
                 widthOption,
-                heightOption
+                heightOption,
+                filenameOption
             };
 
             rootCommand.Description = "Generates Conway's game of life";
 
             rootCommand.SetHandler(
-                (int rows, int cols, int totalTime, int timeBetweenTicks, int cellSpacing, int cellRadius, String cellColour, int width, int height) =>
+                (int rows, int cols, int totalTime, int timeBetweenTicks, int cellSpacing, int cellRadius, String cellColour, int width, int height, String filename) =>
                 {
                     Run(
                         rows,
@@ -75,7 +82,8 @@ namespace GameOfLife
                         cellRadius,
                         cellColour,
                         width,
-                        height);
+                        height,
+                        filename);
                 },
                 rowsOption,
                 colsOption,
@@ -85,7 +93,8 @@ namespace GameOfLife
                 cellRadiusOption,
                 cellColourOption,
                 widthOption,
-                heightOption
+                heightOption,
+                filenameOption
                 );
 
             return rootCommand.Invoke(args);
@@ -100,7 +109,8 @@ namespace GameOfLife
             int cellRadius,
             String cellColour,
             int width,
-            int height)
+            int height,
+            String filename)
         {
             Game.Clock clock = Game.Clock.Instance;
             clock.SetUp(totalTime, timeBetweenTicks);
@@ -125,7 +135,8 @@ namespace GameOfLife
 
             board.SetFinalState();
 
-            board.Canvas.WriteSvg();
+            board.Canvas.WriteSvg(filename);
+            board.Canvas.WriteHtml(filename);
         }
     }
 }
