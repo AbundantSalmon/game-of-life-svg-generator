@@ -1,5 +1,5 @@
 ﻿using System;
-namespace game_of_life
+namespace GameOfLife.Game
 {
     public class Board
     {

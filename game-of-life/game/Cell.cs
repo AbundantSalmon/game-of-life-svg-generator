@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace game_of_life
+namespace GameOfLife.Game
 {
     public enum State
     {

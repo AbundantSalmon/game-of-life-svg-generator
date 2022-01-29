@@ -1,8 +1,7 @@
 ﻿using System;
 using System.CommandLine;
-using System.IO;
 
-namespace game_of_life
+namespace GameOfLife
 {
     class Program
     {
@@ -47,7 +46,7 @@ namespace game_of_life
 
         static void Run(int rows, int cols, int totalTime, int timeBetweenTicks)
         {
-            Board board = new Board(rows, cols);
+            Game.Board board = new Game.Board(rows, cols);
             board.SetRandomBoardState();
 
             for (int i = 0; i < totalTime * 1000 / timeBetweenTicks; ++i)
