@@ -61,7 +61,7 @@ namespace GameOfLife.Svg
         {
             String element =
                 $"<rect x=\"{X}\" y=\"{Y}\" width=\"{Width}\" height=\"{Height}\" rx=\"{Rx}\" fill=\"{Fill}\">\n" +
-                $"\t<animate attributeName=\"fill-opacity\" values=\"{_animationValues}\" keyTimes=\"{_keyTimes}\" dur=\"{_durationSeconds}s\" repeatCount =\"indefinite\"/>" +
+                $"\t<animate calcMode=\"discrete\" attributeName=\"fill-opacity\" values=\"{_animationValues}\" keyTimes=\"{_keyTimes}\" dur=\"{_durationSeconds}s\" repeatCount =\"indefinite\"/>" +
                 $"</rect>\n";
             return element;
         }
