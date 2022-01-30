@@ -150,7 +150,7 @@ namespace GameOfLife.Game
             {
                 for (int j = 0; j < this.GetWidth(); ++j)
                 {
-                    this._cells[i, j].SetNextState(1.0);
+                    this._cells[i, j].SetNextState(1.0, true);
                 }
             }
         }

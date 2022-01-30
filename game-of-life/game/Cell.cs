@@ -96,12 +96,12 @@ namespace GameOfLife.Game
             SvgCell.AddKeyFrame(opacityValue, clock.getCurrentTimeFraction());
         }
 
-        public void SetNextState(double timeFraction)
+        public void SetNextState(double timeFraction, bool force = false)
         {
             State newState = _nextState;
             SetState(newState);
             int opacityValue = newState == State.ALIVE ? 1 : 0;
-            SvgCell.AddKeyFrame(opacityValue, timeFraction);
+            SvgCell.AddKeyFrame(opacityValue, timeFraction, force);
         }
     }
 }

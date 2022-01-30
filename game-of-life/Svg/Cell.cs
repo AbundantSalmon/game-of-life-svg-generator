@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 namespace GameOfLife.Svg
 {
     public class Cell
@@ -38,22 +39,24 @@ namespace GameOfLife.Svg
         public int Rx { get => _rx; set => _rx = value; }
         public string Fill { get => _fill; set => _fill = value; }
 
-        public void AddKeyFrame(int opacityValue, double timeFraction)
+        public void AddKeyFrame(int opacityValue, double timeFraction, bool force = false)
         {
-            if(_animationValues.Equals(""))
+            // Assume animationValue and keyTimes are always changed in unison
+            if (_animationValues.Equals(""))
             {
                 _animationValues += $"{opacityValue}";
-            } else
-            {
-                _animationValues += $";{opacityValue}";
-            }
-
-            if (_keyTimes.Equals(""))
-            {
                 _keyTimes += $"{timeFraction}";
-            } else
+            }
+            else
             {
-                _keyTimes += $";{timeFraction}";
+                // reduce filesize
+                int lastOpacityValue = int.Parse(_animationValues.Split(";").Last());
+                if (!(lastOpacityValue == opacityValue) || force)
+                {
+                    _animationValues += $";{opacityValue}";
+                    _keyTimes += $";{timeFraction}";
+                }
+
             }
         }
 
