@@ -44,6 +44,12 @@ namespace GameOfLife
                 description: "Colour of the cells"
                 );
             cellColourOption.AddAlias("-c");
+            Option<String> backgroundColourOption = new Option<String>(
+            "--background",
+            getDefaultValue: () => "rgba(0, 0, 0, 0)",
+            description: "Background colour"
+            );
+            backgroundColourOption.AddAlias("-bg");
             Option<int> widthOption = new Option<int>(
                 "--width",
                 getDefaultValue: () => 600,
@@ -86,18 +92,32 @@ namespace GameOfLife
                 heightOption,
                 filenameOption,
                 seedFileOption,
-                linearCalcModeOption
+                linearCalcModeOption,
+                backgroundColourOption
             };
 
             rootCommand.Description = "Generates Conway's game of life";
 
             rootCommand.SetHandler(
-                (int rows, int cols, int totalTime, int timeBetweenTicks, int cellSpacing, int cellRadius, String cellColour, int width, int height, String filename, FileInfo seedFile, bool linearCalcMode) =>
+                (int rows,
+                int cols,
+                int totalTime,
+                int timeBetweenTicks,
+                int cellSpacing,
+                int cellRadius,
+                String cellColour,
+                int width,
+                int height,
+                String filename,
+                FileInfo seedFile,
+                bool linearCalcMode,
+                String backgroundColour) =>
                 {
                     if(linearCalcMode)
                     {
                         Game.Config.Instance.CalcMode = Game.SvgCalcMode.LINEAR;
                     }
+                    Game.Config.Instance.BackgroundColour = backgroundColour;
 
                     if (seedFile is null)
                     {
@@ -139,7 +159,8 @@ namespace GameOfLife
                 heightOption,
                 filenameOption,
                 seedFileOption,
-                linearCalcModeOption
+                linearCalcModeOption,
+                backgroundColourOption
                 );
 
             return rootCommand.Invoke(args);

@@ -14,6 +14,7 @@ namespace GameOfLife.Game
         // Singleton
         public static Config Instance { get; } = new Config();
         public string CalcMode { get => _calcMode; set => _calcMode = value; }
+        public string BackgroundColour { get => _backgroundColour; set => _backgroundColour = value; }
 
         private Config()
         {
@@ -21,5 +22,6 @@ namespace GameOfLife.Game
         }
 
         private String _calcMode = SvgCalcMode.DISCRETE;
+        private String _backgroundColour = "rgba(0, 0, 0, 0)";
     }
 }
