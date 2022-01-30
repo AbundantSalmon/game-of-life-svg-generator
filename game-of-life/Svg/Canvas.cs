@@ -35,7 +35,10 @@ namespace GameOfLife.Svg
             String text = $"<svg style=\"background-color:{Game.Config.Instance.BackgroundColour}\" width=\"{_width}\" height=\"{_height}\">\n";
             foreach (Cell cell in _elements)
             {
-                text += cell.GenerateSvgElement();
+                if (!cell.IsEmpty())
+                {
+                    text += cell.GenerateSvgElement();
+                }
             }
             text += $"</svg>\n";
             return text;

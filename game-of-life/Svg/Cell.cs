@@ -69,5 +69,10 @@ namespace GameOfLife.Svg
                 $"</rect>\n";
             return element;
         }
+
+        public bool IsEmpty()
+        {
+            return _animationValues.Equals("0;0") || _animationValues.Equals("");
+        }
     }
 }
