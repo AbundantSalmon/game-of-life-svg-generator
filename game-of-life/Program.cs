@@ -67,6 +67,12 @@ namespace GameOfLife
                 getDefaultValue: () => null,
                 description: "Seed file, should be a csv with with 1 in alive cells"
                 );
+            Option<bool> linearCalcModeOption = new Option<bool>(
+                "--linear",
+                getDefaultValue: () => false,
+                description: "Set the svg animation calcMode to linear, default is discrete"
+                );
+            linearCalcModeOption.AddAlias("-l");
 
             RootCommand rootCommand = new RootCommand{
                 rowsOption,
@@ -79,14 +85,20 @@ namespace GameOfLife
                 widthOption,
                 heightOption,
                 filenameOption,
-                seedFileOption
+                seedFileOption,
+                linearCalcModeOption
             };
 
             rootCommand.Description = "Generates Conway's game of life";
 
             rootCommand.SetHandler(
-                (int rows, int cols, int totalTime, int timeBetweenTicks, int cellSpacing, int cellRadius, String cellColour, int width, int height, String filename, FileInfo seedFile) =>
+                (int rows, int cols, int totalTime, int timeBetweenTicks, int cellSpacing, int cellRadius, String cellColour, int width, int height, String filename, FileInfo seedFile, bool linearCalcMode) =>
                 {
+                    if(linearCalcMode)
+                    {
+                        Game.Config.Instance.CalcMode = Game.SvgCalcMode.LINEAR;
+                    }
+
                     if (seedFile is null)
                     {
                         Run(
@@ -126,7 +138,8 @@ namespace GameOfLife
                 widthOption,
                 heightOption,
                 filenameOption,
-                seedFileOption
+                seedFileOption,
+                linearCalcModeOption
                 );
 
             return rootCommand.Invoke(args);
