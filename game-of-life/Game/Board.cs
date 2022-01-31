@@ -47,12 +47,13 @@ namespace GameOfLife.Game
             {
                 for (int j = 0; j < this.GetWidth(); ++j)
                 {
+                    // Adjacents
                     Cell cellOfConcern = this._cells[i, j];
                     if (i > 0)
                     {
                         cellOfConcern.AddNeighbour(this._cells[i - 1, j]);
                     }
-                    if (i < this.GetHeight() - 1 - 1)
+                    if (i < this.GetHeight() - 1)
                     {
                         cellOfConcern.AddNeighbour(this._cells[i + 1, j]);
                     }
@@ -60,26 +61,53 @@ namespace GameOfLife.Game
                     {
                         cellOfConcern.AddNeighbour(this._cells[i, j - 1]);
                     }
-                    if (j < this.GetWidth() - 1 - 1)
+                    if (j < this.GetWidth() - 1)
                     {
                         cellOfConcern.AddNeighbour(this._cells[i, j + 1]);
                     }
 
+                    // Diagonals
                     if (i > 0 && j > 0)
                     {
                         cellOfConcern.AddNeighbour(this._cells[i - 1, j - 1]);
                     }
-                    if (i > 0 && j < this.GetWidth() - 1 - 1)
+                    if (i > 0 && j < this.GetWidth() - 1)
                     {
                         cellOfConcern.AddNeighbour(this._cells[i - 1, j + 1]);
                     }
-                    if (i < this.GetHeight() - 1 - 1 && j > 0)
+                    if (i < this.GetHeight() - 1 && j > 0)
                     {
                         cellOfConcern.AddNeighbour(this._cells[i + 1, j - 1]);
                     }
-                    if (i < this.GetHeight() - 1 - 1 && j < this.GetWidth() - 1 - 1)
+                    if (i < this.GetHeight() - 1 && j < this.GetWidth() - 1)
                     {
                         cellOfConcern.AddNeighbour(this._cells[i + 1, j + 1]);
+                    }
+
+                    // Wrap around
+                    if (i == 0 && j != 0 && j != this.GetWidth() - 1)
+                    {
+                        cellOfConcern.AddNeighbour(this._cells[this.GetHeight() - 1, j]);
+                        cellOfConcern.AddNeighbour(this._cells[this.GetHeight() - 1, j - 1]);
+                        cellOfConcern.AddNeighbour(this._cells[this.GetHeight() - 1, j + 1]);
+                    }
+                    if (i == this.GetHeight() - 1 && j != 0 && j != this.GetWidth() - 1)
+                    {
+                        cellOfConcern.AddNeighbour(this._cells[0, j]);
+                        cellOfConcern.AddNeighbour(this._cells[0, j - 1]);
+                        cellOfConcern.AddNeighbour(this._cells[0, j + 1]);
+                    }
+                    if (j == 0 && i != 0 && i != this.GetHeight() - 1)
+                    {
+                        cellOfConcern.AddNeighbour(this._cells[i, this.GetWidth() - 1]);
+                        cellOfConcern.AddNeighbour(this._cells[i - 1, this.GetWidth() - 1]);
+                        cellOfConcern.AddNeighbour(this._cells[i + 1, this.GetWidth() - 1]);
+                    }
+                    if (j == this.GetWidth() - 1 && i != 0 && i != this.GetHeight() - 1)
+                    {
+                        cellOfConcern.AddNeighbour(this._cells[i, 0]);
+                        cellOfConcern.AddNeighbour(this._cells[i - 1, 0]);
+                        cellOfConcern.AddNeighbour(this._cells[i + 1, 0]);
                     }
                 }
             }
