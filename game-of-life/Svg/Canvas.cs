@@ -32,7 +32,7 @@ namespace GameOfLife.Svg
 
         public String GenerateSvg()
         {
-            String text = $"<svg style=\"background-color:{Game.Config.Instance.BackgroundColour}\" width=\"{_width}\" height=\"{_height}\">\n";
+            String text = $"<svg style=\"background-color:{Game.Config.Instance.BackgroundColour}\" xmlns=\"http://www.w3.org/2000/svg\" width=\"{_width}\" height=\"{_height}\">\n";
             foreach (Cell cell in _elements)
             {
                 if (!cell.IsEmpty())
