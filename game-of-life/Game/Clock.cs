@@ -26,6 +26,7 @@ namespace GameOfLife.Game
 
         public int getTotalTime()
         {
+            Debug.Assert(_hasSetup);
             return _totalTime;
         }
 
