@@ -127,12 +127,12 @@ namespace GameOfLife.Game
                     {
                         cellOfConcern.AddNeighbour(this._cells[0, 0]);
                         cellOfConcern.AddNeighbour(this._cells[this.GetHeight() - 1, this.GetWidth() - 1]);
-                        cellOfConcern.AddNeighbour(this._cells[this.GetHeight() - 1, 0]);
+                        cellOfConcern.AddNeighbour(this._cells[0, this.GetWidth() - 1]);
                     }
                     if (i == this.GetHeight() - 1 && j == this.GetWidth() - 1)
                     {
                         cellOfConcern.AddNeighbour(this._cells[0, 0]);
-                        cellOfConcern.AddNeighbour(this._cells[this.GetHeight() - 1, this.GetWidth() - 1]);
+                        cellOfConcern.AddNeighbour(this._cells[0, this.GetWidth() - 1]);
                         cellOfConcern.AddNeighbour(this._cells[this.GetHeight() - 1, 0]);
                     }
 
